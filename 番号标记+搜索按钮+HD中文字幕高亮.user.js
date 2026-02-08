@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         番号标记+搜索按钮 + HD中文字幕高亮（更强健版）
 // @namespace    http://tampermonkey.net/
-// @version      1.8
+// @version      1.9
 // @description  更稳健地识别番号并添加搜索按钮；仅高亮表格行中同时含HD与中文字幕的行（不破坏DOM）
 // @author       Jhih He
 // @license      MIT
@@ -69,14 +69,14 @@
 
         /* 高亮行样式 - 柔和的琥珀色，带有左侧指示条 */
         .bt-helper-highlight-row {
-            background-color: #fffbf0 !important; /* 极淡琥珀色，不刺眼 */
+            background-color: #ffecb3 !important; /* 明显的琥珀色背景 */
             position: relative;
             transition: background-color 0.3s ease;
         }
         
         /* 鼠标悬停高亮行增强 */
         .bt-helper-highlight-row:hover {
-            background-color: #fff3cd !important;
+            background-color: #ffe082 !important;
         }
 
         /* 左侧指示条 - 视觉引导 */
