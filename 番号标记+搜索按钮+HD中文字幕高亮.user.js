@@ -1,42 +1,118 @@
 // ==UserScript==
 // @name         番号标记+搜索按钮 + HD中文字幕高亮（更强健版）
 // @namespace    http://tampermonkey.net/
-// @version      1.6
+// @version      1.7
 // @description  更稳健地识别番号并添加搜索按钮；仅高亮表格行中同时含HD与中文字幕的行（不破坏DOM）
 // @author       Jhih He
 // @license      MIT
 // @match        *://*/*
-// @grant        none
+// @grant        GM_addStyle
+// @grant        GM_registerMenuCommand
+// @grant        GM_setValue
+// @grant        GM_getValue
 // ==/UserScript==
 
 (function() {
     'use strict';
 
+    // ================= 配置区域 =================
+    const CONFIG = {
+        enableHighlight: GM_getValue('enableHighlight', true),
+        searchBase: "https://sukebei.nyaa.si/?f=0&c=0_0&q="
+    };
+
+    // ================= 样式定义 (UI/UX Pro Max) =================
+    const STYLES = `
+        /* 搜索按钮样式 - Pill Shape, 现代感蓝色调 */
+        .bt-helper-search-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 6px;
+            padding: 2px 8px;
+            background-color: #f0f7ff; /* 极淡蓝背景 */
+            color: #0066cc !important; /* 品牌蓝文字 */
+            border: 1px solid #cce5ff; /* 淡蓝边框 */
+            border-radius: 12px; /* 圆角胶囊 */
+            font-size: 11px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-weight: 500;
+            text-decoration: none !important;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            line-height: 1.2;
+            vertical-align: middle;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* 悬停效果 - 提升交互感 */
+        .bt-helper-search-btn:hover {
+            background-color: #0066cc;
+            color: white !important;
+            border-color: #005bb5;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0, 102, 204, 0.2);
+        }
+
+        /* 点击效果 */
+        .bt-helper-search-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* 图标微调 */
+        .bt-helper-icon {
+            margin-right: 3px;
+            font-size: 10px;
+        }
+
+        /* 高亮行样式 - 柔和的琥珀色，带有左侧指示条 */
+        .bt-helper-highlight-row {
+            background-color: #fffbf0 !important; /* 极淡琥珀色，不刺眼 */
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+        
+        /* 鼠标悬停高亮行增强 */
+        .bt-helper-highlight-row:hover {
+            background-color: #fff3cd !important;
+        }
+
+        /* 左侧指示条 - 视觉引导 */
+        .bt-helper-highlight-row td:first-child {
+            box-shadow: inset 4px 0 0 #ffc107; /* 使用内阴影模拟边框，避免布局抖动 */
+        }
+    `;
+    GM_addStyle(STYLES);
+
+    // ================= 菜单命令 =================
+    GM_registerMenuCommand(`✨ 高亮 HD+中字: ${CONFIG.enableHighlight ? '已开启 ✅' : '已关闭 ❌'}`, () => {
+        GM_setValue('enableHighlight', !CONFIG.enableHighlight);
+        location.reload();
+    });
+
+    // ================= 核心逻辑 =================
+    
     // 更宽松：允许大小写、比如 [SSIS-924]、ssIs-924 等
     const codeRegex = /([A-Za-z]{2,8}-\d{2,6})/gi;
-    const searchBase = "https://sukebei.nyaa.si/?f=0&c=0_0&q=";
 
-    // 禁止深入修改的标签（我们不会在这些内部替换文本）
-    const FORBIDDEN_TAGS = new Set(['SCRIPT','STYLE','NOSCRIPT','CODE','PRE']);
+    // 禁止深入修改的标签
+    const FORBIDDEN_TAGS = new Set(['SCRIPT','STYLE','NOSCRIPT','CODE','PRE','TEXTAREA','INPUT']);
 
-    // 检查在给定容器（或其附近）是否已存在对应的搜索按钮
+    // 检查是否已存在按钮
     function hasExistingSearchNearby(node, match) {
         if (!node) return false;
-        // 搜索当前元素、其父元素以及父的父元素中是否存在 data-added-search 对应链接
         let p = node;
         for (let i=0; i<4 && p; i++) {
             if (p.querySelector) {
-                const anchors = p.querySelectorAll('a[data-added-search="1"]');
-                for (const a of anchors) {
-                    if (a.href && a.href.indexOf(searchBase + encodeURIComponent(match)) !== -1) return true;
-                }
+                const anchors = p.querySelectorAll(`a[data-bt-helper-search="${match}"]`);
+                if (anchors.length > 0) return true;
             }
             p = p.parentNode;
         }
         return false;
     }
 
-    // 如果文本节点位于一个 <a> 标签内部，返回该最近的 <a> 元素；否则返回 null
     function nearestAnchorAncestor(node) {
         let p = node.parentNode;
         while (p && p.nodeType === 1) {
@@ -46,85 +122,71 @@
         return null;
     }
 
-    // 在目标元素之后插入一个搜索锚点（避免插入到 <a> 内部）
-    function insertSearchAfterElement(el, match) {
-        if (!el || hasExistingSearchNearby(el, match)) return;
+    // 创建美化后的搜索按钮
+    function createSearchButton(match) {
         const a = document.createElement('a');
-        a.textContent = ' 🔍';
-        a.href = `${searchBase}${encodeURIComponent(match)}`;
+        a.className = 'bt-helper-search-btn';
+        a.href = `${CONFIG.searchBase}${encodeURIComponent(match)}`;
         a.target = '_blank';
         a.rel = 'noopener noreferrer';
-        a.style.marginLeft = '5px';
-        a.style.color = '#0077cc';
-        a.style.textDecoration = 'none';
-        a.setAttribute('data-added-search', '1');
-
-        // Insert after element
-        if (el.nextSibling) el.parentNode.insertBefore(a, el.nextSibling);
-        else el.parentNode.appendChild(a);
+        a.title = `在 Sukebei Nyaa 搜索 ${match}`;
+        a.setAttribute('data-bt-helper-search', match);
+        
+        // 内容：图标 + 文本
+        a.innerHTML = `<span class="bt-helper-icon">🔍</span>搜 ${match}`;
+        
+        return a;
     }
 
-    // 在文本节点内部安全地替换并插入按钮（当文本不在 <a> 内部时）
+    function insertSearchAfterElement(el, match) {
+        if (!el || hasExistingSearchNearby(el, match)) return;
+        const btn = createSearchButton(match);
+        if (el.nextSibling) el.parentNode.insertBefore(btn, el.nextSibling);
+        else el.parentNode.appendChild(btn);
+    }
+
     function replaceTextNodeWithButtons(textNode) {
         const text = textNode.nodeValue;
         if (!text) return;
-        let m;
+        
         codeRegex.lastIndex = 0;
-        if (!codeRegex.test(text)) {
-            codeRegex.lastIndex = 0;
-            return;
-        }
+        if (!codeRegex.test(text)) return;
         codeRegex.lastIndex = 0;
 
         const parent = textNode.parentNode;
-        // 如果父节点是禁止标签，直接返回
         if (!parent || FORBIDDEN_TAGS.has(parent.tagName)) return;
 
         const frag = document.createDocumentFragment();
         let lastIndex = 0;
+        let m;
+
         while ((m = codeRegex.exec(text)) !== null) {
             const match = m[1];
             const offset = m.index;
 
-            // 追加中间普通文本
             if (offset > lastIndex) {
                 frag.appendChild(document.createTextNode(text.slice(lastIndex, offset)));
             }
 
-            // 如果在父节点/附近已经有该按钮，则只插入番号文本
             if (hasExistingSearchNearby(parent, match)) {
                 frag.appendChild(document.createTextNode(match));
             } else {
-                // 插入番号文本（保留原样）
                 const span = document.createElement('span');
                 span.textContent = match;
                 frag.appendChild(span);
-
-                // 插入搜索链接
-                const a = document.createElement('a');
-                a.textContent = ' 🔍';
-                a.href = `${searchBase}${encodeURIComponent(match)}`;
-                a.target = '_blank';
-                a.rel = 'noopener noreferrer';
-                a.style.marginLeft = '5px';
-                a.style.color = '#0077cc';
-                a.style.textDecoration = 'none';
-                a.setAttribute('data-added-search', '1');
-                frag.appendChild(a);
+                frag.appendChild(createSearchButton(match));
             }
 
             lastIndex = offset + match.length;
         }
-        // 剩余文本
+
         if (lastIndex < text.length) {
             frag.appendChild(document.createTextNode(text.slice(lastIndex)));
         }
 
-        // 用构造的片段替换原文本节点（不会破坏其它子元素）
         parent.replaceChild(frag, textNode);
     }
 
-    // 主处理函数：扫描文本节点但对在 <a> 内的文本采用不同处理
     function walkAndAddButtons(root) {
         const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
         const nodes = [];
@@ -133,13 +195,10 @@
 
         for (const node of nodes) {
             if (!node.nodeValue) continue;
-            // 快速跳过只包含空白或很短的节点
             if (!/[A-Za-z]{2,}-\d/.test(node.nodeValue)) continue;
 
-            // 如果该文本节点位于 <a> 内部，直接在该 <a> 元素后插入按钮（不修改 a 内部）
             const aAncestor = nearestAnchorAncestor(node);
             if (aAncestor) {
-                // 在 a 后插入搜索按钮，针对该 a 内的所有匹配（避免重复插入）
                 let m;
                 codeRegex.lastIndex = 0;
                 const seen = new Set();
@@ -155,55 +214,57 @@
                 continue;
             }
 
-            // 否则安全替换文本节点（文本不在 <a> 中）
             replaceTextNodeWithButtons(node);
         }
     }
 
-    // 仅高亮 table 的行（tr），避免全页染色
     function highlightRows() {
+        if (!CONFIG.enableHighlight) return;
+        
         const rows = document.querySelectorAll('tr');
         rows.forEach(tr => {
+            // 如果已经处理过，跳过 (可选优化，这里直接重新检查以支持动态变化)
             const text = (tr.innerText || '').replace(/\s+/g, ' ');
             if (/HD/i.test(text) && /(中文|中文字幕|中字)/.test(text)) {
-                tr.style.backgroundColor = "rgba(255, 255, 150, 0.6)";
-                tr.style.borderRadius = "4px";
+                tr.classList.add('bt-helper-highlight-row');
             } else {
-                if (tr.style.backgroundColor) tr.style.backgroundColor = "";
-                if (tr.style.borderRadius) tr.style.borderRadius = "";
+                tr.classList.remove('bt-helper-highlight-row');
             }
         });
     }
 
-    // 初次运行（稍微延迟一下以兼容部分慢渲染页面）
+    // ================= 初始化 =================
     function initialRun() {
         try {
             walkAndAddButtons(document.body);
             highlightRows();
         } catch (e) {
-            console.error('脚本运行异常：', e);
+            console.error('[BT-Helper] Error:', e);
         }
     }
-    setTimeout(initialRun, 600); // 延迟 600ms 再运行一次
+    
+    // 启动延迟
+    setTimeout(initialRun, 600);
 
-    // 动态监听新增节点
+    // 观察者
     const observer = new MutationObserver(mutations => {
+        let shouldHighlight = false;
         for (const m of mutations) {
+            if (m.addedNodes.length > 0) shouldHighlight = true;
             for (const node of m.addedNodes) {
                 if (node.nodeType !== 1) continue;
                 try {
                     walkAndAddButtons(node);
                 } catch (e) {
-                    console.error('处理新增节点出错：', e);
+                    console.error('[BT-Helper] Observer Error:', e);
                 }
             }
         }
-        // 每次变更后也更新高亮
-        highlightRows();
+        if (shouldHighlight) highlightRows();
     });
     observer.observe(document.body, { childList: true, subtree: true });
 
-    // 加载完成时再跑一次（保险）
+    // 再次保险
     window.addEventListener('load', () => {
         setTimeout(() => {
             walkAndAddButtons(document.body);

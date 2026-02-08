@@ -3,7 +3,7 @@
 [中文](README.md) | [English](README-EN.md)
 
 ![License](https://img.shields.io/github/license/jhihhe/BT-helper)
-![Version](https://img.shields.io/badge/version-1.6-blue)
+![Version](https://img.shields.io/badge/version-1.7-blue)
 ![Language](https://img.shields.io/badge/language-JavaScript-yellow)
 ![Platform](https://img.shields.io/badge/platform-Tampermonkey-green)
 [![Install](https://img.shields.io/badge/Install-Click_Here-red)](https://github.com/jhihhe/BT-helper/raw/main/%E7%95%AA%E5%8F%B7%E6%A0%87%E8%AE%B0%2B%E6%90%9C%E7%B4%A2%E6%8C%89%E9%92%AE%2BHD%E4%B8%AD%E6%96%87%E5%AD%97%E5%B9%95%E9%AB%98%E4%BA%AE.user.js)
@@ -29,6 +29,11 @@ This is a Tampermonkey script designed to optimize the browsing experience by au
 *   **Dynamic Monitoring**: Uses `MutationObserver` to monitor page changes, supporting dynamically loaded content (e.g., infinite scroll pages).
 *   **Lazy Loading**: The script has a brief delay at startup to ensure compatibility with slower-loading pages.
 
+### 4. 🎨 UI/UX Pro Max Experience
+*   **Refined Buttons**: New pill-shaped search buttons with a fresh color scheme and hover effects.
+*   **Soft Highlighting**: Uses a very pale amber background (`#fffbf0`) with a left indicator strip for a more comfortable visual experience.
+*   **Settings Menu**: Supports toggling features (e.g., turning highlighting on/off) via the Tampermonkey menu.
+
 ## Installation
 
 1.  Ensure you have the [Tampermonkey](https://www.tampermonkey.net/) extension installed in your browser.
@@ -43,4 +48,4 @@ This is a Tampermonkey script designed to optimize the browsing experience by au
 
 ## Version Info
 
-*   **Current Version**: 1.6
+*   **Current Version**: 1.7

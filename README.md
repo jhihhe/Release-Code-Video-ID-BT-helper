@@ -3,7 +3,7 @@
 [中文](README.md) | [English](README-EN.md)
 
 ![License](https://img.shields.io/github/license/jhihhe/BT-helper)
-![Version](https://img.shields.io/badge/version-1.6-blue)
+![Version](https://img.shields.io/badge/version-1.7-blue)
 ![Language](https://img.shields.io/badge/language-JavaScript-yellow)
 ![Platform](https://img.shields.io/badge/platform-Tampermonkey-green)
 [![Install](https://img.shields.io/badge/Install-Click_Here-red)](https://github.com/jhihhe/BT-helper/raw/main/%E7%95%AA%E5%8F%B7%E6%A0%87%E8%AE%B0%2B%E6%90%9C%E7%B4%A2%E6%8C%89%E9%92%AE%2BHD%E4%B8%AD%E6%96%87%E5%AD%97%E5%B9%95%E9%AB%98%E4%BA%AE.user.js)
@@ -29,6 +29,11 @@
 *   **动态监听**：使用 `MutationObserver` 监听页面变化，支持动态加载的内容（如无限滚动页面）。
 *   **延迟加载**：脚本启动时会有短暂延迟，确保兼容加载较慢的页面。
 
+### 4. 🎨 UI/UX Pro Max 体验
+*   **美化按钮**：全新的胶囊型搜索按钮，配色清爽，带有悬停交互效果。
+*   **柔和高亮**：使用极淡的琥珀色背景 (`#fffbf0`) 配合左侧指示条，视觉更舒适，不再刺眼。
+*   **配置菜单**：支持通过 Tampermonkey 菜单开关功能（例如切换高亮功能的开启/关闭）。
+
 ## 安装方法
 
 1.  请确保您的浏览器已安装 [Tampermonkey](https://www.tampermonkey.net/) 扩展。
@@ -43,4 +48,4 @@
 
 ## 版本信息
 
-*   **当前版本**: 1.6
+*   **当前版本**: 1.7
