@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         番号标记+搜索按钮 + HD中文字幕高亮（更强健版）
 // @namespace    http://tampermonkey.net/
-// @version      1.7
+// @version      1.8
 // @description  更稳健地识别番号并添加搜索按钮；仅高亮表格行中同时含HD与中文字幕的行（不破坏DOM）
 // @author       Jhih He
 // @license      MIT
+// @homepage     https://github.com/jhihhe/BT-helper
 // @match        *://*/*
 // @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
