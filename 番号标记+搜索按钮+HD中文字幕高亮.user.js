@@ -1,12 +1,17 @@
 // ==UserScript==
-// @name         番号标记+搜索按钮 + HD中文字幕高亮（更强健版）
+// @name         🚀 番号助手：自动识别网页番号并一键搜索 ➕ HD中文字幕高亮指示器 🎨 UI/UX Pro Max
+// @name:zh-CN   🚀 番号助手：自动识别网页番号并一键搜索 ➕ HD中文字幕高亮指示器 🎨 UI/UX Pro Max
+// @name:en      🚀 Code Assistant: Auto-recognize codes & One-click search ➕ HD & Chinese Subtitle Highlighter 🎨 UI/UX Pro Max
 // @namespace    http://tampermonkey.net/
-// @version      1.9
-// @description  更稳健地识别番号并添加搜索按钮；仅高亮表格行中同时含HD与中文字幕的行（不破坏DOM）
+// @version      2.0
+// @description  智能扫描并识别网页中的番号（支持动态加载），并自动添加美观的“一键搜索”胶囊按钮。同时高亮包含“HD”和“中文字幕”的资源表格行，助您快速锁定高质量资源！安全、轻量、防误触，提供极致的浏览体验。支持各大资源网站（磁力/种子/BT/Sukebei）。
+// @description:zh-CN 智能扫描并识别网页中的番号（支持动态加载），并自动添加美观的“一键搜索”胶囊按钮。同时高亮包含“HD”和“中文字幕”的资源表格行，助您快速锁定高质量资源！安全、轻量、防误触，提供极致的浏览体验。支持各大资源网站（磁力/种子/BT/Sukebei）。
+// @description:en Smartly scan and recognize codes on web pages (supports dynamic loading), and automatically add a beautiful "One-click Search" capsule button. Simultaneously highlight resource table rows containing "HD" and "Chinese subtitles", helping you quickly locate high-quality resources! Safe, lightweight, prevents accidental clicks, providing the ultimate browsing experience. Supports various resource websites (Magnet/Torrent/BT/Sukebei).
 // @author       Jhih He
 // @license      MIT
 // @homepage     https://github.com/jhihhe/BT-helper
 // @match        *://*/*
+// @icon         https://api.iconify.design/fluent-emoji-flat:magnifying-glass-tilted-right.svg
 // @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
 // @grant        GM_setValue
