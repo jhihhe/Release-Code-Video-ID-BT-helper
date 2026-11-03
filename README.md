@@ -1,3 +1,13 @@
+<!-- readme-visuals:header:start -->
+<p align="center"><img src="readme-assets/banner.svg" alt="Code Assistant — Code recognition, search shortcuts and row highlights" width="100%"></p>
+
+<p align="center">
+  <a href="https://github.com/jhihhe/Release-Code-Video-ID-BT-helper/commits/main"><img src="https://img.shields.io/github/last-commit/jhihhe/Release-Code-Video-ID-BT-helper?style=flat-square&amp;color=818cf8" alt="Last commit"></a>
+  <a href="https://github.com/jhihhe/Release-Code-Video-ID-BT-helper/stargazers"><img src="https://img.shields.io/github/stars/jhihhe/Release-Code-Video-ID-BT-helper?style=flat-square&amp;color=818cf8" alt="GitHub stars"></a>
+  <a href="https://github.com/jhihhe"><img src="https://img.shields.io/badge/Maintainer-%40Jhih%20he-818cf8?style=flat-square" alt="Maintainer: @Jhih he"></a>
+</p>
+<!-- readme-visuals:header:end -->
+
 # 🚀 番号助手：自动识别网页番号并一键搜索 ➕ HD中文字幕高亮指示器 (UI/UX Pro Max)
 
 [![Version](https://img.shields.io/badge/Version-2.0-blue.svg)]()
@@ -8,6 +18,30 @@
 这是一个致力于提供 **极致浏览体验 (UI/UX Pro Max)** 的 Tampermonkey (油猴) 脚本。它能智能扫描网页中的番号，提供美观的**一键搜索**胶囊按钮，并自动**高亮显示**包含“HD”和“中文字幕”的资源行，助您在一秒内锁定最佳资源！
 
 ---
+
+<!-- readme-visuals:overview:start -->
+
+## 项目速览
+
+<table>
+<tr>
+<td width="33%"><strong>编号识别</strong><br><br>扫描网页中的编号并添加搜索入口。</td>
+<td width="33%"><strong>结果高亮</strong><br><br>突出同时包含 HD 与中文字幕标识的表格行。</td>
+<td width="33%"><strong>动态页面</strong><br><br>监听动态内容，提供菜单高亮开关。</td>
+</tr>
+</table>
+
+### 流程概览
+
+```mermaid
+flowchart LR
+    S0["安装并启用脚本"] --> S1
+    S1["打开适用网页"] --> S2
+    S2["识别编号与表格标识"] --> S3
+    S3["使用搜索入口或查看高亮"]
+```
+
+<!-- readme-visuals:overview:end -->
 
 ## ✨ 核心功能 (Features)
 

@@ -1,3 +1,13 @@
+<!-- readme-visuals:header:start -->
+<p align="center"><img src="readme-assets/banner.svg" alt="Code Assistant — Code recognition, search shortcuts and row highlights" width="100%"></p>
+
+<p align="center">
+  <a href="https://github.com/jhihhe/Release-Code-Video-ID-BT-helper/commits/main"><img src="https://img.shields.io/github/last-commit/jhihhe/Release-Code-Video-ID-BT-helper?style=flat-square&amp;color=818cf8" alt="Last commit"></a>
+  <a href="https://github.com/jhihhe/Release-Code-Video-ID-BT-helper/stargazers"><img src="https://img.shields.io/github/stars/jhihhe/Release-Code-Video-ID-BT-helper?style=flat-square&amp;color=818cf8" alt="GitHub stars"></a>
+  <a href="https://github.com/jhihhe"><img src="https://img.shields.io/badge/Maintainer-%40Jhih%20he-818cf8?style=flat-square" alt="Maintainer: @Jhih he"></a>
+</p>
+<!-- readme-visuals:header:end -->
+
 # 🚀 Code Assistant: Auto-recognize codes & One-click search ➕ HD & Chinese Subtitle Highlighter (UI/UX Pro Max)
 
 [![Version](https://img.shields.io/badge/Version-2.0-blue.svg)]()
@@ -8,6 +18,30 @@
 This is a Tampermonkey script dedicated to providing the **Ultimate Browsing Experience (UI/UX Pro Max)**. It intelligently scans codes (designations) on web pages, provides beautiful **One-click Search** capsule buttons, and automatically **Highlights** resource rows containing "HD" and "Chinese Subtitles", helping you lock onto the best resources in a second!
 
 ---
+
+<!-- readme-visuals:overview:start -->
+
+## At a glance
+
+<table>
+<tr>
+<td width="33%"><strong>Code recognition</strong><br><br>Scan page codes and add search shortcuts.</td>
+<td width="33%"><strong>Row highlighting</strong><br><br>Highlight rows with HD and Chinese subtitle indicators.</td>
+<td width="33%"><strong>Dynamic pages</strong><br><br>Observe new content and toggle highlights from the menu.</td>
+</tr>
+</table>
+
+### Workflow overview
+
+```mermaid
+flowchart LR
+    S0["Install and enable the script"] --> S1
+    S1["Open a supported page"] --> S2
+    S2["Detect codes and row indicators"] --> S3
+    S3["Use search shortcuts or inspect highlights"]
+```
+
+<!-- readme-visuals:overview:end -->
 
 ## ✨ Features
 
